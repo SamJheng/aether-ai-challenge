@@ -6,8 +6,10 @@ import { TodoObject } from '../interfaces/type';
   providedIn: 'root'
 })
 export class ToDoService {
+  $events: StorageEvent[] = [];
+  constructor(private readonly lss: LocalStorageService) {
 
-  constructor(private lss: LocalStorageService) { }
+  }
 
   addItem(key: string, value: TodoObject):boolean{
     try {
@@ -36,5 +38,20 @@ export class ToDoService {
     } catch (error) {
       return false;
     }
+  }
+  getLocalStorageService$(){
+    return this.lss;
+  }
+  getAllItem(): TodoObject[]{
+    var values = [],
+      keys = Object.keys(localStorage),
+      i = keys.length;
+
+    while (i--) {
+      const s2j = JSON.parse(localStorage.getItem(keys[i]) as string);
+      values.push(s2j);
+    }
+
+    return values;
   }
 }

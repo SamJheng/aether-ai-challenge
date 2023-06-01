@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocalStorageDirective } from 'ngx-localstorage';
+import { MaterialModule } from './material.module';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent
@@ -13,7 +15,9 @@ import { LocalStorageDirective } from 'ngx-localstorage';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    LocalStorageDirective
+    LocalStorageDirective,
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

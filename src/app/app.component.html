@@ -1,3 +1,31 @@
-<h1 class="text-3xl font-bold underline">
-  Hello world!
-</h1>
+
+<mat-toolbar color="primary">
+  <span>To-Do List Application</span>
+</mat-toolbar>
+
+
+
+<mat-selection-list >
+  <mat-list-option *ngFor="let item of todoListEach"  [selected]="item.iscompleted">
+    <div class=" flex items-center px-6">
+      <span class="text-2xl font-semibold">{{item.title}}</span>
+      <span class="ml-20">{{item.description}}</span>
+    </div>
+  </mat-list-option>
+</mat-selection-list>
+<div class="flex items-end w-full justify-between fixed py-8 bottom-0  px-8  shadow-inner">
+  <form [formGroup]="formGroup" class="w-full">
+    <div class="flex flex-col w-full pr-8">
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="title" id="title" [formControl]="titleControl"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput placeholder="description" class="w-full" id="description" [formControl]="descriptionControl"/>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <button color="accent" mat-mini-fab (click)="addItemToList()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
