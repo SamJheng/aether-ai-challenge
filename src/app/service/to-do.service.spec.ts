@@ -35,25 +35,26 @@ describe('ToDoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should have add testObj as read testObj', () => {
-    const c = service.addItem(uuid_add, testObj)
+  it('should have add testObj as read testObj', async () => {
+    const c = await service.addItem(uuid_add, testObj)
     expect(c).toBeTrue()
-    const r = service.readItemByKey(uuid_add);
+    const r = await service.readItemByKey(uuid_add);
+    console.log(r)
     expect(r).toEqual(testObj);
   });
 
-  it('should have remove testObj as null', () => {
-    const c = service.addItem(uuid_remove, testObj)
-    const d = service.removeItem(uuid_remove)
-    const r = service.readItemByKey(uuid_add);
-    expect(r).toBeNull(testObj);
+  it('should have remove testObj as null', async () => {
+    const c = await service.addItem(uuid_remove, testObj)
+    const d = await service.removeItem(uuid_remove)
+    const r = await service.readItemByKey(uuid_add);
+    expect(r).toBeUndefined()
   });
 
-  it('should have update testObj as updated value', () => {
-    const c = service.addItem(uuid_update, testObj)
+  it('should have update testObj as updated value', async () => {
+    const c = await service.addItem(uuid_update, testObj)
     expect(c).toBeTrue();
-    const u = service.updateItem(uuid_update,testObj_updated)
-    const r = service.readItemByKey(uuid_update);
+    const u = await service.updateItem(uuid_update,testObj_updated)
+    const r = await service.readItemByKey(uuid_update);
     expect(r).toEqual(testObj_updated);
   });
 

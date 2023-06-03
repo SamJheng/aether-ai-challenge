@@ -1,57 +1,59 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-localstorage';
 import { TodoObject } from '../interfaces/type';
-
+import { StorageMap } from '@ngx-pwa/local-storage';
+import { Observable, firstValueFrom, lastValueFrom, of, switchMap } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class ToDoService {
-  $events: StorageEvent[] = [];
-  constructor(private readonly lss: LocalStorageService) {
+  private todolist: TodoObject[] = [];
+  constructor(private readonly lss: LocalStorageService, private storage: StorageMap) {
 
   }
 
-  addItem(key: string, value: TodoObject):boolean{
+  async addItem(key: string, value: TodoObject):Promise<boolean>{
     try {
-      this.lss.set<TodoObject>(key, value);
+      await lastValueFrom(this.storage.set(key, value));
       return true;
     } catch (error) {
       return false;
     }
   }
-  readItemByKey(key: string){
-    const item = this.lss.get<TodoObject>(key);
-    return item;
+  async readItemByKey(key: string): Promise<TodoObject>{
+    const item = await lastValueFrom(this.storage.get(key));
+    return item as TodoObject;
   }
-  removeItem(key: string){
+  async removeItem(key: string){
     try {
-      this.lss.remove(key);
+      const d = await lastValueFrom(this.storage.delete(key));
       return true;
     } catch (error) {
       return false;
     }
   }
-  updateItem(key: string, value: TodoObject){
+  async updateItem(key: string, value: TodoObject){
     try {
-      this.lss.set<TodoObject>(key, value);
+      await lastValueFrom(this.storage.set(key, value));
       return true;
     } catch (error) {
       return false;
     }
   }
-  getLocalStorageService$(){
-    return this.lss;
+
+  getAllItem(){
+
+    return this.storage.keys().pipe(
+      switchMap(async (k)=>{
+        this.todolist = [];
+        const i = await this.readItemByKey(k) as TodoObject;
+        console.log(i)
+        this.todolist.push({id:k,...i})
+        return this.todolist;
+      })
+    )
   }
-  getAllItem(): TodoObject[]{
-    var values = [],
-      keys = Object.keys(localStorage),
-      i = keys.length;
-
-    while (i--) {
-      const s2j = JSON.parse(localStorage.getItem(keys[i]) as string);
-      values.push(s2j);
-    }
-
-    return values;
+  async getCount(){
+    return await lastValueFrom(this.storage.size);
   }
 }
