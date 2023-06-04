@@ -6,8 +6,9 @@
 <mat-list>
   <mat-list-item *ngFor="let item of todoListEach">
     <div class=" flex items-center px-6">
-      <span class="text-2xl font-semibold flex-1">{{item.title}}</span>
-      <span class="ml-5 flex-[4]">{{item.description}}</span>
+      <span [ngClass]="{'line-through': item.iscompleted}" class="text-2xl font-semibold flex-1">{{item.title}}</span>
+      <span [ngClass]="{'line-through': item.iscompleted}" class="ml-5 flex-[4]">{{item.description}}</span>
+      <span class="text-gray-400">{{item.create_at| date :'short'}}</span>
       <button mat-icon-button (click)="removeItembyId(item)">
         <mat-icon>delete</mat-icon>
       </button>

@@ -23,7 +23,6 @@ export class AppComponent {
       description: ['', Validators.required]
     });
     this.getTodoListEach().subscribe(list=>{
-      console.log(list)
       this.todoListEach = list;
     })
     this.updateTodoListEach()
@@ -63,7 +62,7 @@ export class AppComponent {
         item.iscompleted = completed
       }
       await this.toDoService.updateItem(key, item);
-
+      this.updateTodoListEach();
     }
 
 
