@@ -8,52 +8,59 @@ import { Observable, firstValueFrom, lastValueFrom, of, switchMap } from 'rxjs';
 })
 export class ToDoService {
   private todolist: TodoObject[] = [];
+  primaryKey = 'todo-list';
   constructor(private readonly lss: LocalStorageService, private storage: StorageMap) {
-
+    this.checkInstanceAndCreate();
   }
-
-  async addItem(key: string, value: TodoObject):Promise<boolean>{
+  async checkInstanceAndCreate(){
+    const td = await lastValueFrom(this.storage.has(this.primaryKey));
+    if (!td) {
+      await lastValueFrom(this.storage.set(this.primaryKey, []))
+    }
+  }
+  async addItem(value: TodoObject):Promise<boolean>{
     try {
-      await lastValueFrom(this.storage.set(key, value));
+      const list = await this.getAllItem();
+      list.push(value);
+      console.log(list)
+      await lastValueFrom(this.storage.set(this.primaryKey, list));
       return true;
     } catch (error) {
+      console.error(error)
       return false;
     }
   }
-  async readItemByKey(key: string): Promise<TodoObject>{
-    const item = await lastValueFrom(this.storage.get(key));
+  async getItemByID(id: string): Promise<TodoObject>{
+    const list = await this.getAllItem();
+    const item = list.find(i=>i.id===id);
     return item as TodoObject;
   }
-  async removeItem(key: string){
+  async removeItem(id: string){
     try {
-      const d = await lastValueFrom(this.storage.delete(key));
+      const list = await this.getAllItem();
+      const delet_list = list.filter((i) => i.id !== id);
+      await lastValueFrom(this.storage.set(this.primaryKey, delet_list));
       return true;
     } catch (error) {
       return false;
     }
   }
-  async updateItem(key: string, value: TodoObject){
+  async updateItem(id: string, value: TodoObject){
     try {
-      await lastValueFrom(this.storage.set(key, value));
+      const list = await this.getAllItem();
+      const index = list.findIndex(i => i.id === id);
+      if (index !== -1) {
+        list[index] = value;
+      }
+      await lastValueFrom(this.storage.set(this.primaryKey, list));
       return true;
     } catch (error) {
       return false;
     }
   }
 
-  getAllItem(){
-
-    return this.storage.keys().pipe(
-      switchMap(async (k)=>{
-        this.todolist = [];
-        const i = await this.readItemByKey(k) as TodoObject;
-        console.log(i)
-        this.todolist.push({id:k,...i})
-        return this.todolist;
-      })
-    )
-  }
-  async getCount(){
-    return await lastValueFrom(this.storage.size);
+  async getAllItem():Promise< TodoObject[]>{
+    const list = await lastValueFrom(this.storage.get(this.primaryKey)) || [];
+    return list as TodoObject[];
   }
 }
