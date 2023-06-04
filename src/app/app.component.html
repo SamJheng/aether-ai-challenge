@@ -3,19 +3,18 @@
   <span>To-Do List Application</span>
 </mat-toolbar>
 
-
-
-<mat-selection-list >
-  <mat-list-option *ngFor="let item of todoListEach"  [selected]="item.iscompleted" >
+<mat-list>
+  <mat-list-item *ngFor="let item of todoListEach">
     <div class=" flex items-center px-6">
       <span class="text-2xl font-semibold flex-1">{{item.title}}</span>
       <span class="ml-5 flex-[4]">{{item.description}}</span>
       <button mat-icon-button (click)="removeItembyId(item)">
         <mat-icon>delete</mat-icon>
       </button>
+      <mat-checkbox [checked]="item.iscompleted" (change)="updateCompleted(item,$event.checked)"></mat-checkbox>
     </div>
-  </mat-list-option>
-</mat-selection-list>
+  </mat-list-item>
+</mat-list>
 <div class="flex items-end w-full justify-between fixed py-8 bottom-0  px-8  shadow-inner">
   <form [formGroup]="formGroup" class="w-full">
     <div class="flex flex-col w-full pr-8">
