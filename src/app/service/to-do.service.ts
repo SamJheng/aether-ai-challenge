@@ -21,12 +21,10 @@ export class ToDoService {
   async addItem(value: TodoObject):Promise<boolean>{
     try {
       const list = await this.getAllItem();
-      list.push(value);
-      console.log(list)
+
       await lastValueFrom(this.storage.set(this.primaryKey, list));
       return true;
     } catch (error) {
-      console.error(error)
       return false;
     }
   }

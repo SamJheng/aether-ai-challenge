@@ -64,8 +64,16 @@ export class AppComponent {
       await this.toDoService.updateItem(key, item);
       this.updateTodoListEach();
     }
-
-
+  }
+  async updateDesc(obj: TodoObject, event: Event){
+    const key = obj.id || null;
+    const target = event.target as HTMLInputElement;
+    if (key) {
+      const item = await this.toDoService.getItemByID(key);
+      item.description = target.value;
+      await this.toDoService.updateItem(key, item);
+      this.updateTodoListEach();
+    }
   }
   async updateTodoListEach(){
     this.subject.next(1);
