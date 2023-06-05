@@ -36,6 +36,7 @@ export class AppComponent {
   async addItemToList(){
     const now = new Date().getTime();
     const uid = uuidv4();
+
     if (this.formGroup.valid) {
       await this.toDoService.addItem({
         title: this.titleControl.value,
@@ -44,7 +45,9 @@ export class AppComponent {
         iscompleted:false,
         id: uid
       });
+      console.log(uid)
       this.updateTodoListEach();
+      console.log(uid)
     }
   }
   async removeItembyId(obj: TodoObject){
@@ -66,6 +69,7 @@ export class AppComponent {
     }
   }
   async updateDesc(obj: TodoObject, event: Event){
+    console.log(event)
     const key = obj.id || null;
     const target = event.target as HTMLInputElement;
     if (key) {
