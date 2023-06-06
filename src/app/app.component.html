@@ -13,7 +13,7 @@
       <!-- <span [ngClass]="{'line-through': item.iscompleted}" class="ml-5 flex-[4]">{{item.description}}</span> -->
 
       <div [ngClass]="{'line-through': item.iscompleted}" class="ml-5 flex-[4]">
-        <input type="text" [value]="item.description"/>
+        <input type="text" [value]="item.description" (change)="updateDesc(item,$event)"/>
         <!-- <button mat-icon-button  >
           <mat-icon class="text-green-600 fill-green-600">checked</mat-icon>
         </button> -->
