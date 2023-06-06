@@ -14,6 +14,7 @@ export class AppComponent {
   formGroup: FormGroup ;
   todoListEach: TodoObject[] = [];
   subject = new BehaviorSubject(1);
+  searchText = '';
   constructor(
     private toDoService: ToDoService,
     private formBuilder: FormBuilder
@@ -23,15 +24,24 @@ export class AppComponent {
       description: ['', Validators.required]
     });
     this.getTodoListEach().subscribe(list=>{
-      this.todoListEach = list;
+      if (this.searchText !=='') {
+        this.todoListEach = list.filter(i => i.title === this.searchText || i.description === this.searchText);
+      } else{
+        this.todoListEach = list;
+      }
     })
-    this.updateTodoListEach()
+    this.updateTodoListEach();
   }
   get titleControl(): FormControl {
     return this.formGroup.get('title') as FormControl;
   }
   get descriptionControl(): FormControl {
     return this.formGroup.get('description') as FormControl;
+  }
+  searchByText(event: Event){
+    const target = event.target as HTMLInputElement;
+    this.searchText = target.value;
+    this.updateTodoListEach()
   }
   async addItemToList(){
     const now = new Date().getTime();
@@ -45,9 +55,7 @@ export class AppComponent {
         iscompleted:false,
         id: uid
       });
-      console.log(uid)
       this.updateTodoListEach();
-      console.log(uid)
     }
   }
   async removeItembyId(obj: TodoObject){
